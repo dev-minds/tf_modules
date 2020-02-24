@@ -22,7 +22,7 @@ resource "aws_s3_bucket_policy" "dm_s3_private_acc_res" {
     {
       "Sid": "",
       "Action": ["s3:GetObject"],
-      "Effect": "Allow",
+      "Effect": "Deny",
       "Resource": ["arn:aws:s3:::${var.bucket_name}",
                    "arn:aws:s3:::${var.bucket_name}/*"],
       "Principal": "*"
