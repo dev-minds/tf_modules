@@ -9,7 +9,8 @@ resource "aws_s3_bucket" "dm_s3_mod_res" {
   }
 }
 
-resource "aws_s3_bucket_policy" "private" {
+
+resource "aws_s3_bucket_policy" "dm_s3_private_acc_res" {
   count = "${var.public_access != true && var.create_bucket ? 1 : 0}"
   bucket = "${aws_s3_bucket.dm_s3_mod_res[0].id}"
 
@@ -24,6 +25,40 @@ resource "aws_s3_bucket_policy" "private" {
       "Resource": ["arn:aws:s3:::${var.bucket_name}",
                    "arn:aws:s3:::${var.bucket_name}/*"],
       "Principal": "*"
+    }
+  ]
+}
+EOF
+}
+
+
+resource "aws_s3_bucket_policy" "dm_s3_public_acc_res" {
+  count  = "${var.allow_public && var.create_bucket ? 1 : 0}"
+  bucket = "${aws_s3_bucket.this[0].id}"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Action": ["s3:*"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::${var.bucket_name}",
+                   "arn:aws:s3:::${var.bucket_name}/*"],
+      "Principal": "*"
+    },
+    {
+      "Sid": "",
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::${var.bucket_name}",
+                   "arn:aws:s3:::${var.bucket_name}/*"],
+      "Principal": {
+        "AWS": "*"
+      }
     }
   ]
 }
