@@ -9,7 +9,23 @@ resource "aws_s3_bucket" "dm_s3_mod_res" {
   }
 }
 
-# resource "aws_s3_bucket_public_access_block" "dm_s3_public_access_res" {
-#   depends_on = ["${aws_s3_bucket.dm_s3_mod_res}"]
+resource "aws_s3_bucket_policy" "private" {
+  count = "${var.public_access != true && var.create_bucket ? 1 : 0}"
+  bucket = "${aws_s3_bucket.dm_s3_mod_res[0].id}"
 
-# }
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "",
+      "Action": ["s3:*"],
+      "Effect": "Allow",
+      "Resource": ["arn:aws:s3:::${var.bucket_name}",
+                   "arn:aws:s3:::${var.bucket_name}/*"],
+      "Principal": "*"
+    }
+  ]
+}
+EOF
+}
