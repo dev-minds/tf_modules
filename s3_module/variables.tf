@@ -14,5 +14,10 @@ variable "bucket_acct" {
   description = "Specify bucket account"
 }
 
+variable "create_bucket" {
+  description = "Specify creation of bucket"
+  
+}
+
 
 
