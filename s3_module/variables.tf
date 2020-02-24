@@ -19,5 +19,10 @@ variable "create_bucket" {
   
 }
 
+variable "public_access" {
+  description = "Specify Public Access"
+}
+
+
 
 
