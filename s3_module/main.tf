@@ -20,7 +20,7 @@ resource "aws_s3_bucket_policy" "dm_s3_private_acc_res" {
   "Statement": [
     {
       "Sid": "",
-      "Action": ["s3:*"],
+      "Action": ["s3:GetObject"],
       "Effect": "Allow",
       "Resource": ["arn:aws:s3:::${var.bucket_name}",
                    "arn:aws:s3:::${var.bucket_name}/*"],
