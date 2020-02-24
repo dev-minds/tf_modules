@@ -34,7 +34,7 @@ EOF
 
 resource "aws_s3_bucket_policy" "dm_s3_public_acc_res" {
   count  = "${var.allow_public && var.create_bucket ? 1 : 0}"
-  bucket = "${aws_s3_bucket.this[0].id}"
+  bucket = "${aws_s3_bucket.dm_s3_mod_res[0].id}"
 
   policy = <<EOF
 {
