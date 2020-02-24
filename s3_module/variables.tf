@@ -16,7 +16,7 @@ variable "bucket_acct" {
 
 variable "create_bucket" {
   description = "Specify creation of bucket"
-  
+
 }
 
 variable "public_access" {

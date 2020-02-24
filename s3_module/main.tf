@@ -1,7 +1,8 @@
 resource "aws_s3_bucket" "dm_s3_mod_res" {
-  count  = "${var.create_bucket ? 1 : 0}"
-  bucket = "${var.bucket_name}"
-  acl    = "${var.bucket_acl}"
+  count         = "${var.create_bucket ? 1 : 0}"
+  bucket        = "${var.bucket_name}"
+  acl           = "${var.bucket_acl}"
+  force_destroy = true
 
   tags = {
     Name        = "${var.bucket_tag}"
@@ -11,7 +12,7 @@ resource "aws_s3_bucket" "dm_s3_mod_res" {
 
 
 resource "aws_s3_bucket_policy" "dm_s3_private_acc_res" {
-  count = "${var.public_access != true && var.create_bucket ? 1 : 0}"
+  count  = "${var.public_access != true && var.create_bucket ? 1 : 0}"
   bucket = "${aws_s3_bucket.dm_s3_mod_res[0].id}"
 
   policy = <<EOF
