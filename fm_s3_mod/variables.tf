@@ -2,7 +2,7 @@
 variable "region" {
   description = "Specify region"
   type        = string
-  default     = "eu-west-1"
+  default     = ""
 }
 
 variable "create_bucket_toggle" {
@@ -20,13 +20,13 @@ variable "bucket_name" {
 variable "bucket_prefix" {
   description = "Specific custom prefix for bucket"
   type        = string
-  default     = "pref"
+  default     = ""
 }
 
 variable "access_level" {
   description = "Specify resource layer access level"
   type        = string
-  default     = "private"
+  default     = ""
 }
 
 variable "map_tags" {
@@ -38,7 +38,7 @@ variable "map_tags" {
 variable "force_destroy" {
   description = "Specify to destroy objects from bucket before destroying bucket "
   type        = bool
-  default     = false
+  default     = null
 }
 
 variable "acceleration_status" {
