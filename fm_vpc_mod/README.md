@@ -9,12 +9,7 @@
 	- 
 	
 	
-2. - VPC  
-
-3. terraform init --> Happens one time 
-
-   - terraforom validate 
-   - terraform fmt 
-   - terraform plan 
-   - terraform apply
+2. fm_s3_mod
+3. fm_vpc_mod
+4. fm_asg_mod
    
