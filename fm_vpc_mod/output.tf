@@ -3,10 +3,10 @@
 # Below list of reference possible fetchable resources 
 # https://github.com/terraform-aws-modules/terraform-aws-vpc/blob/master/outputs.tf
 # #################################################################################
-output "vpc_id_otp" {
-  description = "Fetch VPC ID "
-  value       = concat(aws_vpc.dm_vpc_res.*.id, [""])[0]
-}
+// output "vpc_id_otp" {
+//   description = "Fetch VPC ID "
+//   value       = concat(aws_vpc.dm_vpc_res.*.id, [""])[0]
+// }
 
 output "vpc_cidr_otp" {
   description = "Fetch VPC cidr"
