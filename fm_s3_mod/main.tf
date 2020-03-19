@@ -1,10 +1,10 @@
 # Main resource definition 
 
 resource "aws_s3_bucket" "dm_s3_mod_res" {
-  count = var.create_bucket_toggle ? 1 : 0
-
-  bucket = var.bucket_name
+  // count = var.create_bucket_toggle ? 1 : 0
   // bucket_prefix       = var.bucket_pref
+  count               = length(var.bucket_name)
+  bucket              = var.bucket_name[count.index]
   acl                 = var.access_level
   tags                = var.map_tags
   force_destroy       = var.force_destroy

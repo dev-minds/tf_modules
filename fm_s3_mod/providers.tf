@@ -9,7 +9,7 @@ terraform {
 
   backend "s3" {
     bucket  = "dm-vpc-states"
-    key     = "modules_tests/terraform.tfstate"
+    key     = "modules_tst/terraform.tfstate"
     region  = "eu-west-1"
     encrypt = "true"
   }
