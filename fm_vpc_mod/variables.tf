@@ -27,5 +27,8 @@ variable "ami_id" {
   default = ""
 }
 
+variable "name_tag" {
+  default = ""
+}
 
 
