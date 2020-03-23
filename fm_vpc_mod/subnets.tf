@@ -19,7 +19,7 @@ resource "aws_subnet" "dm_sn_pub_res" {
   map_public_ip_on_launch = "true"
 
   tags = {
-    "Name" = "${length(var.name_tag, count.index)}-DM-PUBLIC-SN-${element(var.availability_zones, count.index)}"
+    "Name" = "${var.name_tag}-DM-PUBLIC-SN-${element(var.availability_zones, count.index)}"
   }
 }
 
@@ -32,7 +32,7 @@ resource "aws_subnet" "dm_sn_priv_res" {
   map_public_ip_on_launch = "false"
 
   tags = {
-    "Name" = "${length(var.name_tag, count.index)}-DM-PRIVATE-SN-${element(var.availability_zones-var, count.index)}"
+    "Name" = "${var.name_tag}-DM-PRIVATE-SN-${element(var.availability_zones, count.index)}"
   }
 }
 
@@ -42,7 +42,7 @@ resource "aws_eip" "dm_eip_res" {
   vpc   = true
 
   tags = {
-    "Name" = "${length(var.name_tag, count.index)}-DM-EIP-${element(var.availability_zones, count.index)}"
+    "Name" = "${var.name_tag}-DM-EIP-${element(var.availability_zones, count.index)}"
   }
 }
 
@@ -53,6 +53,6 @@ resource "aws_nat_gateway" "dm_natg_res" {
   allocation_id = "${element(aws_eip.dm_eip_res.*.id, count.index)}"
 
   tags = {
-    "Name" = "${length(var.name_tag, count.index)}-DM-NAT-${element(var.availability_zones, count.index)}"
+    "Name" = "${var.name_tag}-DM-NAT-${element(var.availability_zones, count.index)}"
   }
 }
