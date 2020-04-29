@@ -19,14 +19,14 @@ variable "name_tag" {
 
 variable "dns_support" {
   description = "Specify to enable dns-support"
-  type        = bool
-  default     = ""
+  type        = string
+  default     = "false"
 }
 
 variable "dns_hostn" {
   description = "Specify to enable dns_hostn"
-  type        = bool
-  default     = ""
+  type        = string
+  default     = "false"
 }
 
 variable "pub_ip_range" {
