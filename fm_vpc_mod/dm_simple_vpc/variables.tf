@@ -12,7 +12,7 @@ variable "inst_tenancy" {
 }
 
 variable "name_tag" {
-  description = "SPecify Name tag fot vpc"
+  description = "Specify Name tag fot vpc"
   type        = string
   default     = ""
 }
@@ -54,13 +54,13 @@ variable "priv_azs" {
 }
 
 variable "enabled_nat_gateway" {
-  description = "Set to false to prevent the module from creating NAT Gateway resources."
-  default     = true
+  description = "Tip just set to false and save money"
+  default     = ""
   type        = string
 }
 
 variable "enabled_single_nat_gateway" {
-  description = "Set to true to create single NAT Gateway resource."
-  default     = false
+  description = "Just set to false"
+  default     = ""
   type        = string
 }
