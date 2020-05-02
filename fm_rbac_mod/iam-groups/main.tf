@@ -1,3 +1,7 @@
+provider "aws" {
+  region = "eu-west-1"
+}
+
 resource "aws_iam_policy" "grp_assume_pol_res" {
   name        = "GroupSwitchAcctPol"
   description = "Allows to assume role in another AWS account"
@@ -15,7 +19,7 @@ resource "aws_iam_group" "dm_grp_res" {
 }
 
 resource "aws_iam_group_membership" "dm_grp_member_res" {
-  count = length(var.grp_users) > 0 ? 1 : 0
+  // count = length(var.grp_users) > 0 ? 1 : 0
   group = var.grp_name
   name  = var.grp_name
   users = var.grp_users
