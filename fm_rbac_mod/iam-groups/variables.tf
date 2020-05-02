@@ -1,23 +1,17 @@
 variable "grp_name" {
   description = "Specify group name"
   type        = string
-  default     = "team_london"
+  default     = ""
 }
 
-variable "group_users" {
+variable "grp_users" {
   description = "Specify IAM users to have"
   type        = list(string)
-  default     = ["peter"]
+  default     = []
 }
 
-variable "assumable_roles" {
-  description = "List of IAM roles ARNs which can be assumed by the group"
-  type        = list(string)
-  default     = ["OrganizationAccountAccessRole"]
-}
-
-variable "policy_name" {
-  description = "Name of IAM policy and IAM group"
+variable "aws_account_id" {
+  description = "Keeping this as centrale account for all groups"
   type        = string
-  default     = "GroupSwitchAcctPol"   
+  default     = "658951324167"
 }
