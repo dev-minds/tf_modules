@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "eu-west-1"
-}
-
 resource "aws_iam_policy" "grp_assume_pol_res" {
   name        = "GroupSwitchAcctPol${var.grp_name}"
   description = "Allows to assume role in another AWS account"
