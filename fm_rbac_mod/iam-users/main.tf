@@ -1,7 +1,3 @@
-provider "aws" {
-  region = "eu-west-1"
-}
-
 resource "aws_iam_user" "dm_user_res" {
   count         = "${length(var.all_users)}"
   name          = "${element(var.all_users, count.index)}"
@@ -27,17 +23,7 @@ resource "aws_iam_access_key" "dm_user_access_res" {
 variable "all_users" {
   description = "Specify usernames"
   type        = list
-  default = [
-    "oye",
-    "michael",
-    "emmanuel",
-    "sylvia",
-    "stephanie",
-    "najeem",
-    "femi",
-    "peter",
-    "oni",
-  ]
+  default = []
 }
 
 # ======================================================================== # 
