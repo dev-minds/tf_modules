@@ -1,9 +1,9 @@
-// provider "aws" {
-//   region = "eu-west-1"
-// }
+provider "aws" {
+  region = "eu-west-1"
+}
 
 resource "aws_iam_policy" "grp_assume_pol_res" {
-  name        = "GroupSwitchAcctPol"
+  name        = "GroupSwitchAcctPol${var.grp_name}"
   description = "Allows to assume role in another AWS account"
   policy      = data.aws_iam_policy_document.assume_role.json
 }
@@ -28,7 +28,7 @@ resource "aws_iam_group_membership" "dm_grp_member_res" {
 
 
 resource "aws_iam_policy" "iam_self_management" {
-  name = "GroupBasePermPol"
+  name = "GroupBasePermPol${var.grp_name}"
   //name_prefix = var.iam_self_management_policy_name_prefix
   policy = data.aws_iam_policy_document.iam_self_management.json
 }
