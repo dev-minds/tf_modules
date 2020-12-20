@@ -5,14 +5,14 @@ variable "target_subnet" { default = "" }
 variable "vpc_id" { default = "" }
 
 data "aws_ami" "this_ami" {
-  executable_users = ["self"]
+  # executable_users = ["self"]
   most_recent      = true
   # name_regex       = "^${var.ami_name}"
   owners           = ["self"]
 
   filter {
     name   = "name"
-    values = ["BaseCentOs7-*"]
+    values = ["amzn-ami-hvm*"]
   }
 
   filter {
