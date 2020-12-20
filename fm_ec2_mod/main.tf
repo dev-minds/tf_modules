@@ -5,6 +5,7 @@ variable "target_subnet" { default = "" }
 variable "vpc_id" { default = "" }
 variable "billing_code_tag" { default = "" }
 variable "env_tag" { default = "" }
+variable "instance_count" { default = "" }
 
 locals {
   # bucket_name = "${var.bket_name_prefix}-${var.env_tag}-${random_integer.this_random_vals.result}"
@@ -41,6 +42,7 @@ resource "random_integer" "this_random_vals" {
 }
 
 resource "aws_instance" "inst_res" {
+  count                  = var.instance_count
   ami                    = data.aws_ami.this_ami.id
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.sg_res.id]
