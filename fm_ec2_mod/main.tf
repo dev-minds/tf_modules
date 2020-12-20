@@ -3,11 +3,20 @@ variable "instance_type" { default = "" }
 variable "target_keypairs" { default = "" }
 variable "target_subnet" { default = "" }
 variable "vpc_id" { default = "" }
+variable "billing_code_tag" { default = "" }
+variable "env_tag" { default = "" }
 
+locals {
+  # bucket_name = "${var.bket_name_prefix}-${var.env_tag}-${random_integer.this_random_vals.result}"
+  common_tags = {
+    BillingCodes = var.billing_code_tag
+    EnvLocals    = var.env_tag
+  }
+}
+
+data "aws_availability_zones" "this_ds_azs" {}
 data "aws_ami" "this_ami" {
-  # executable_users = ["self"]
   most_recent      = true
-  # name_regex       = "^${var.ami_name}"
   owners           = ["self"]
 
   filter {
@@ -26,6 +35,11 @@ data "aws_ami" "this_ami" {
   }
 }
 
+resource "random_integer" "this_random_vals" {
+  min = 1000000
+  max = 9999900
+}
+
 resource "aws_instance" "inst_res" {
   ami                    = data.aws_ami.this_ami.id
   instance_type          = var.instance_type
@@ -33,9 +47,9 @@ resource "aws_instance" "inst_res" {
   key_name               = var.target_keypairs
   subnet_id              = var.target_subnet
 
-  tags = {
-    Name = "Test-Server"
-  }
+  tags = merge(
+    local.common_tags, { Name = "${var.env_tag}-server" }
+  )
 }
 
 resource "aws_security_group" "sg_res" {
@@ -47,9 +61,9 @@ resource "aws_security_group" "sg_res" {
     create_before_destroy = true
   }
 
-  tags = {
-    Name = "TestGroup"
-  }
+  tags = merge(
+    local.common_tags, { Name = "${var.env_tag}-server" }
+  )
 }
 
 resource "aws_security_group_rule" "sg_ssh_res" {
