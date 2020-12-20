@@ -7,7 +7,7 @@ variable "vpc_id" { default = "" }
 data "aws_ami" "this_ami" {
   executable_users = ["self"]
   most_recent      = true
-  name_regex       = "^${var.ami_name}"
+  # name_regex       = "^${var.ami_name}"
   owners           = ["self"]
 
   filter {
