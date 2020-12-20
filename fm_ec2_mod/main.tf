@@ -12,7 +12,7 @@ data "aws_ami" "this_ami" {
 
   filter {
     name   = "name"
-    values = ["Base*"]
+    values = var.ami_name
   }
 
   filter {
