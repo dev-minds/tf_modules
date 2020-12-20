@@ -4,7 +4,7 @@ variable "target_keypairs" { default = "" }
 variable "target_subnet" { default = "" }
 variable "vpc_id" { default = "" }
 
-data "aws_ami" "example" {
+data "aws_ami" "this_ami" {
   executable_users = ["self"]
   most_recent      = true
   name_regex       = "^${var.ami_name}"
@@ -27,7 +27,7 @@ data "aws_ami" "example" {
 }
 
 resource "aws_instance" "inst_res" {
-  ami                    = var.ami_name
+  ami                    = data.aws_ami.this_ami.id
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.sg_res.id]
   key_name               = var.target_keypairs
