@@ -8,7 +8,7 @@ data "aws_ami" "this_ami" {
   # executable_users = ["self"]
   most_recent      = true
   # name_regex       = "^${var.ami_name}"
-  owners           = ["amazon"]
+  owners           = ["self"]
 
   filter {
     name   = "name"
