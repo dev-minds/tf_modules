@@ -27,7 +27,7 @@ data "aws_ami" "example" {
 }
 
 resource "aws_instance" "inst_res" {
-  ami                    = var.ami
+  ami                    = var.ami_name
   instance_type          = var.instance_type
   vpc_security_group_ids = [aws_security_group.sg_res.id]
   key_name               = var.target_keypairs
