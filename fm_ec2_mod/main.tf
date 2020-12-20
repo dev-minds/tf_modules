@@ -12,7 +12,7 @@ data "aws_ami" "this_ami" {
 
   filter {
     name   = "name"
-    values = ["amzn-ami-hvm*"]
+    values = ["Base*"]
   }
 
   filter {
