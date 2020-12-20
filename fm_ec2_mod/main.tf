@@ -12,7 +12,7 @@ data "aws_ami" "example" {
 
   filter {
     name   = "name"
-    values = ["myami-*"]
+    values = ["BaseCentOs7-*"]
   }
 
   filter {
