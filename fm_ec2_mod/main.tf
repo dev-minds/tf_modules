@@ -1,9 +1,30 @@
-variable "ami" { default = "" }
+variable "ami_name" { default = "" }
 variable "instance_type" { default = "" }
 variable "target_keypairs" { default = "" }
 variable "target_subnet" { default = "" }
 variable "vpc_id" { default = "" }
 
+data "aws_ami" "example" {
+  executable_users = ["self"]
+  most_recent      = true
+  name_regex       = "^${var.ami_name}-\\d{3}"
+  owners           = ["self"]
+
+  filter {
+    name   = "name"
+    values = ["myami-*"]
+  }
+
+  filter {
+    name   = "root-device-type"
+    values = ["ebs"]
+  }
+
+  filter {
+    name   = "virtualization-type"
+    values = ["hvm"]
+  }
+}
 
 resource "aws_instance" "inst_res" {
   ami                    = var.ami
