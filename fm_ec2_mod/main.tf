@@ -4,7 +4,6 @@ variable "target_keypairs" { default = "" }
 variable "target_subnet" { default = "" }
 variable "vpc_id" { default = "" }
 
-data "aws_ami" "this_ami" {}
 
 resource "aws_instance" "inst_res" {
   ami                    = var.ami
