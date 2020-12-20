@@ -50,7 +50,7 @@ resource "aws_instance" "inst_res" {
   subnet_id              = var.target_subnet
 
   tags = merge(
-    local.common_tags, { Name = "${var.env_tag}-server" }
+    local.common_tags, { Name = "${var.env_tag}-server-${count.index + 1}" }
   )
 }
 
