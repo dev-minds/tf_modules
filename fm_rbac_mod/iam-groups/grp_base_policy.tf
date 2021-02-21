@@ -56,4 +56,13 @@ data "aws_iam_policy_document" "iam_self_management" {
     effect    = "Allow"
   }
 
+  statement {
+    sid = "AllowECR"
+    actions = [
+      "ecr:*",
+    ]
+    resources = ["*"]
+    effect    = "Allow"
+  }  
+
 }
