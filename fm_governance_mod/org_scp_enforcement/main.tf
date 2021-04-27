@@ -1,33 +1,5 @@
-#1. fetch org id 
-#2. consult id 
-
-data "aws_availability_zones" "this_ds_azs" {}
-resource "random_integer" "this_random_vals" {
-  min = 1000000
-  max = 9999900
-}
-
-# Variables
-variable "deny_leaving_orgs_target_ids" {
-  description = "Target ids (AWS Account or Organizational Unit) to attach an SCP denying the ability to leave the AWS Organization"
-  type        = list(string)
-  default     = ["023451010066", "984463041714"]
-}
-
-variable "allowed_regions" {
-  description = "AWS Regions allowed for use (for use with the restrict regions SCP)"
-  type        = list(string)
-  default     = ["eu-west-1"]
-}
-
-variable "restrict_regions_target_ids" {
-  description = "Target ids (AWS Account or Organizational Unit) to attach an SCP restricting regions."
-  type        = list(string)
-  default     = ["us-west-2"]
-}
-
 #
-# Deny leaving AWS Organizations
+# Deny member account leaving AWS Organizations
 #
 
 data "aws_iam_policy_document" "deny_leaving_orgs" {
@@ -39,40 +11,31 @@ data "aws_iam_policy_document" "deny_leaving_orgs" {
 }
 
 resource "aws_organizations_policy" "deny_leaving_orgs" {
-  name        = "deny-leaving-orgs"
+  name        = var.default-scp-rule-name
   description = "Deny the ability for an AWS account or Organizational Unit from leaving the AWS Organization"
   content     = data.aws_iam_policy_document.deny_leaving_orgs.json
 }
 
 resource "aws_organizations_policy_attachment" "deny_leaving_orgs" {
-  count     = length(var.deny_leaving_orgs_target_ids)
+  count     = length(var.associate-acct-ids)
   policy_id = aws_organizations_policy.deny_leaving_orgs.id
-  target_id = element(var.deny_leaving_orgs_target_ids.*, count.index)
+  target_id = element(var.associate-acct-ids.*, count.index)
 }
 
 #
-# Policy Tagging 
+# Org Tagging Policy | Owner Tag
 # 
-resource "aws_organizations_policy" "tagging_policy" {
-  name        = "GlobalTagging"
+resource "aws_organizations_policy" "org_tagging_policy" {
+  name        = var.restrict-tagpolicy-name
   type        = "TAG_POLICY"
-  description = "Tagging Policy for the org"
+  description = "Tagging Policy defined"
 
   content = <<CONTENT
     {
         "tags": {
-            "Stage": {
-                "tag_value": {
-                    "@@assign": [
-                        "Production",
-                        "Test",
-                        "Development"
-                    ]
-                }
-            },
-            "Project": {
+            "Owner": {
                 "tag_key": {
-                    "@@assign": "Project",
+                    "@@assign": "Owner",
                     "@@operators_allowed_for_child_policies": ["@@none"]
                 },
                 "tag_value": {
@@ -88,11 +51,105 @@ resource "aws_organizations_policy" "tagging_policy" {
 CONTENT
 }
 
-resource "aws_organizations_policy_attachment" "tag_policy_attachment" {
-  count     = length(var.deny_leaving_orgs_target_ids)
-  policy_id = aws_organizations_policy.tagging_policy.id
-  target_id = element(var.deny_leaving_orgs_target_ids.*, count.index)
+resource "aws_organizations_policy_attachment" "org_tag_policy_attachment" {
+  count     = length(var.associate-acct-ids)
+  policy_id = aws_organizations_policy.org_tagging_policy.id
+  target_id = element(var.associate-acct-ids.*, count.index)
 }
+
+
+# 
+# SCP enforcement policy 
+#
+
+resource "aws_organizations_policy" "org_scp_enforce_policy" {
+  name        = var.enforce-scp-rule-name
+  description = "This SCP enforces tags for instances"
+
+  content = <<POLICY
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "DenyRunInstanceWithNoOwnerTag",
+            "Effect": "Deny",
+            "Action": "ec2:RunInstances",
+            "Resource": [
+                "arn:aws:ec2:*:*:instance/*",
+                "arn:aws:ec2:*:*:volume/*"
+            ],
+            "Condition": {
+                "Null": {
+                    "aws:RequestTag/Owner": "true"
+                }
+            }
+        },
+        {
+            "Sid": "DenyCreateVolumeWithNoOwnerTag",
+            "Effect": "Deny",
+            "Action": "ec2:CreateVolume",
+            "Resource": [
+                "arn:aws:ec2:*:*:volume/*"
+            ],
+            "Condition": {
+                "Null": {
+                    "aws:RequestTag/Owner": "true"
+                }
+            }
+        },
+        {
+            "Sid": "DenyCreatSecurityGroupWithNoOwnerTag",
+            "Effect": "Deny",
+            "Action": [
+                "ec2:CreateSecurityGroup"
+            ],
+            "Resource": [
+                "arn:aws:ec2:*:*:security-group/*"
+            ],
+            "Condition": {
+                "Null": {
+                    "aws:RequestTag/Owner": "true"
+                }
+            }
+        },
+        {
+            "Sid": "DenyRemovingOwnerTag",
+            "Effect": "Deny",
+            "Action": [
+                "ec2:DeleteTags"
+            ],
+            "Resource": [
+                "arn:aws:ec2:*:*:instance/*",
+                "arn:aws:ec2:*:*:volume/*",
+                "arn:aws:ec2:*:*:security-group/*"
+            ],
+            "Condition": {
+                "Null": {
+                    "aws:RequestTag/Owner": "false"
+                }
+            }
+        },
+        {
+            "Sid": "Statement3",
+            "Effect": "Deny",
+            "Action": [
+                "secretsmanager:UntagResource"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+POLICY
+}
+
+resource "aws_organizations_policy_attachment" "tag_attach" {
+  count     = length(var.associate-acct-ids)
+  policy_id = aws_organizations_policy.org_scp_enforce_policy.id
+  target_id = element(var.associate-acct-ids.*, count.index)
+}
+
 
 #
 # =============================================================
