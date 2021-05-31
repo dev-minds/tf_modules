@@ -1,3 +1,6 @@
+# https://github.com/trussworks/terraform-aws-org-scp/blob/master/main.tf
+# 
+
 #
 # Deny member account leaving AWS Organizations
 #
